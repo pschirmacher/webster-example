@@ -1,0 +1,37 @@
+<% attributes("layout") = "/computers/layout.ssp" %>
+<% import webster.computers.App._ %>
+<% import webster.requestresponse.Form %>
+
+<%@ val form: Form %>
+
+<% def input(inputType: String, name: String, label: String) = {
+    val field = form.field(name)
+    val error = if (field.hasError) " error" else ""
+    <div class={"clearfix" + error}>
+        <label for={name}>{label}</label>
+
+        <div class="input">
+            <input type={inputType} name={name} value={field.text}></input>
+            {if (field.hasError)
+                <span class="help-inline">{field.error}</span>}
+        </div>
+    </div>
+        } %>
+
+<h1>Add a computer</h1>
+
+<form action="<%= computers.absoluteUrl %>" method="POST">
+    <fieldset>
+
+        <%= input("search", "name", "Name*") %>
+        <%= input("search", "company", "Company*") %>
+        <%= input("search", "introduced", "Introduced*") %>
+        <%= input("search", "discontinued", "Discontinued") %>
+
+    </fieldset>
+
+    <div class="actions">
+        <input type="submit" value="Create this computer" class="btn primary"> or
+        <a href="<%= computers.absoluteUrl %>" class="btn">Cancel</a>
+    </div>
+</form>

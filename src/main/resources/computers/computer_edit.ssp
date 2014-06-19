@@ -1,0 +1,48 @@
+<% attributes("layout") = "/computers/layout.ssp" %>
+<% import webster.computers.App._ %>
+<% import webster.requestresponse.Form %>
+<% import webster.requestresponse.Request %>
+
+<%@ val form: Form %>
+<%@ val _request: Request %>
+
+<% def input(inputType: String, name: String, label: String) = {
+    val field = form.field(name)
+    val error = if (field.hasError) " error" else ""
+    <div class={"clearfix" + error}>
+        <label for={name}>{label}</label>
+
+        <div class="input">
+            <input type={inputType} name={name} value={field.text}></input>
+            {if (field.hasError)
+                <span class="help-inline">{field.error}</span>}
+        </div>
+    </div>
+        } %>
+
+<h1>Edit computer</h1>
+
+#if (_request.context.keys.contains("updated"))
+<div class="alert-message info">Computer updated!</div>
+#end
+
+<form action="<%= editComputer.expand("id", _request.pathParam(":id").value.get).absoluteUrl %>" method="POST">
+    <input type="hidden" name="_method" value="PUT"/>
+    <fieldset>
+        <%= input("search", "name", "Name*") %>
+        <%= input("search", "company", "Company*") %>
+        <%= input("search", "introduced", "Introduced*") %>
+        <%= input("search", "discontinued", "Discontinued") %>
+
+    </fieldset>
+
+    <div class="actions">
+        <input type="submit" value="Update this computer" class="btn primary"> or
+        <a href="<%= computers.absoluteUrl %>" class="btn">Cancel</a>
+    </div>
+</form>
+
+<form class="topRight" action="<%= editComputer.expand("id", _request.pathParam(":id").value.get).absoluteUrl %>" method="POST">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <input type="submit" value="Delete this computer" class="btn danger">
+</form>

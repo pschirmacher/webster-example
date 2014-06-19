@@ -1,0 +1,24 @@
+<%@ var body: String %>
+<%@ var title: String = "Computers" %>
+<html>
+<head>
+    <title>${title}</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/computers.css"/>
+</head>
+<body>
+
+<header class="topbar">
+    <h1 class="fill">
+        <a href="/">
+            webster sample application &mdash; Computer database
+        </a>
+    </h1>
+</header>
+
+<section id="main">
+    ${unescape(body)}
+</section>
+
+</body>
+</html>

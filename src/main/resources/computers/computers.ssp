@@ -1,0 +1,148 @@
+<% attributes("layout") = "/computers/layout.ssp" %>
+<% import webster.requestresponse._ %>
+<% import webster.computers.App._ %>
+<% import webster.computers.core._ %>
+
+<% def requestParam(name: String) = attributes("_request").asInstanceOf[Request].param(name).value().orElse("") %>
+
+<% val currentSortBy: String = requestParam("sortBy") %>
+<% val currentOrder: String = requestParam("order") %>
+<% val currentFilter: String = requestParam("filter") %>
+<%@ val currentPage: Page[Computer] %>
+<%@ val _flash: Scope %>
+
+<% def link(newPage: Int, newSortBy: String) = {
+        var sortBy = currentSortBy
+        var order = currentOrder
+
+        if (newSortBy != null) {
+            sortBy = newSortBy
+            if (currentSortBy == newSortBy) {
+                if (currentOrder == "asc") {
+                    order = "desc"
+                } else {
+                    order = "asc"
+                }
+            } else {
+                order = "asc"
+            }
+        }
+
+        computers
+            .withQueryParam("sortBy", sortBy)
+            .withQueryParam("order", order)
+            .withQueryParam("filter", currentFilter)
+            .withQueryParam("page", newPage.toString)
+            .absoluteUrl()
+        } %>
+
+<% def title(count: Int) = count match {
+        case 0 => "No computers found"
+        case 1 => "One computer found"
+        case _ => count + " computers found"
+        } %>
+
+<% def header(key: String, title: String) = {
+        val sort = if (currentSortBy == key)
+                    if (currentOrder == "asc")
+                        " headerSortDown"
+                    else
+                        " headerSortUp"
+                   else
+                    ""
+        <th class={key.replace(".", "_") + " header" + sort}>
+            <a href={link(0, key)}>{title}</a>
+        </th>
+        } %>
+
+<h1 id="homeTitle"><%= title(currentPage.totalItems) %></h1>
+
+#if (_flash.keys.contains("success"))
+    <div class="alert-message warning">
+        <strong>Done!</strong> <%= _flash.getExisting("success") %>
+    </div>
+#end
+
+<div id="actions">
+
+<form action="<%= link(0, "name") %>" method="GET">
+    <input type="search" id="searchbox" name="filter" value="<%= currentFilter %>" placeholder="Filter by computer name..." />
+    <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary" />
+</form>
+
+<a class="btn success" id="add" href="<%= createComputer.absoluteUrl %>">Add a new computer</a>
+
+</div>
+
+#if (currentPage.totalItems == 0)
+
+    <div class="well">
+        <em>Nothing to display</em>
+    </div>
+
+#else
+
+    <table class="computers zebra-striped">
+        <thead>
+            <tr>
+                <%= header("name", "Computer name") %>
+                <%= header("introduced", "Introduced") %>
+                <%= header("discontinued", "Discontinued") %>
+                <%= header("company", "Company") %>
+            </tr>
+        </thead>
+        <tbody>
+
+        #for (computer <- currentPage.items)
+        <tr>
+            <td>
+                <a href="<%= editComputer.expand("id", computer.id).absoluteUrl() %>">
+                    <%= computer.name %>
+                </a>
+            </td>
+            <td>
+                <%= computer.introduced %>
+            </td>
+            <td>
+                #if (computer.discontinued.isPresent)
+                    <%= computer.discontinued.get %>
+                #else
+                    -
+                #end
+            </td>
+            <td>
+                <%= computer.company %>
+            </td>
+        </tr>
+        #end
+
+        </tbody>
+    </table>
+
+    <div id="pagination" class="pagination">
+    <ul>
+        #if (currentPage.hasPrevious)
+            <li class="prev">
+                <a href="<%= link(currentPage.index - 1, null) %>">&larr; Previous</a>
+            </li>
+        #else
+            <li class="prev disabled">
+                <a>&larr; Previous</a>
+            </li>
+        #end
+        <li class="current">
+            <a>Displaying <%= currentPage.displayXtoYofZ(" to "," of ") %></a>
+        </li>
+        #if (currentPage.hasNext)
+            <li class="next">
+                <a href="<%= link(currentPage.index + 1, null) %>">Next &rarr;</a>
+            </li>
+        #else
+            <li class="next disabled">
+                <a>Next &rarr;</a>
+            </li>
+        #end
+    </ul>
+    </div>
+
+#end
