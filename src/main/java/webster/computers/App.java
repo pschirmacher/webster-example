@@ -22,12 +22,14 @@ import static webster.routing.RoutingBuilder.routingTable;
 
 public class App {
 
+    private static final int port = 8080;
+
     public static final Link home = link().withPattern("/").build();
     public static final Link computers = link().withPattern("/computers").build();
     public static final Link createComputer = link().withPattern("/computer_new").build();
     public static final Link editComputer = link().withPattern("/computer/:id").build();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         RoutingTable routingTable = routingTable()
                 .withRoute(from(home).toResource(Home::new))
@@ -41,10 +43,13 @@ public class App {
                 .decoratedWith(parseHiddenMethodFromForms)
                 .decoratedWith(logRequestResponse);
 
-        new Server().run(app);
+        new Server.Builder()
+                .withPort(port)
+                .build()
+                .run(app);
     }
 
     private static Link.Builder link() {
-        return new Link.Builder().withScheme("http").withHost("localhost").withPort(8080);
+        return new Link.Builder().withScheme("http").withHost("localhost").withPort(port);
     }
 }

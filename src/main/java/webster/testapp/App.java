@@ -8,7 +8,7 @@ import static webster.routing.RoutingBuilder.routingTable;
 
 public class App {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
 
         RoutingTable routingTable = routingTable()
                 .withRoute(from("/").toResource(TestRes::new))
@@ -17,6 +17,6 @@ public class App {
                 .withRoute(from("/:foo/*").toResource(PathParamsRes::new))
                 .build();
 
-        new Server().run(routingTable);
+        new Server.Builder().build().run(routingTable);
     }
 }
