@@ -1,6 +1,8 @@
 package webster.testapp;
 
 import webster.requestresponse.Request;
+import webster.requestresponse.ResponseBody;
+import webster.requestresponse.Responses;
 import webster.requestresponse.parsing.FormParser;
 import webster.resource.Resource;
 
@@ -46,7 +48,7 @@ public class TestRes implements Resource {
     }
 
     @Override
-    public CompletableFuture<Object> entity(Request request) {
-        return CompletableFuture.supplyAsync(() -> "foo");
+    public CompletableFuture<ResponseBody> entity(Request request) {
+        return CompletableFuture.supplyAsync(() -> Responses.bodyFrom("foo"));
     }
 }

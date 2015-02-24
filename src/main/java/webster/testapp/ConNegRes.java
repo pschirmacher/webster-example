@@ -1,6 +1,8 @@
 package webster.testapp;
 
 import webster.requestresponse.Request;
+import webster.requestresponse.ResponseBody;
+import webster.requestresponse.Responses;
 import webster.resource.ContentNegotiationResource;
 import webster.resource.Html;
 
@@ -23,12 +25,12 @@ public class ConNegRes extends ContentNegotiationResource implements Html {
                 .mediaType("text/html", htmlProducer("conneg.jade", this::templateModel));
     }
 
-    private CompletableFuture<Object> jsonEntity(Request request) {
-        return loadEntity(request).thenApply(e -> "{\"json\":\"" + e + "\"}");
+    private CompletableFuture<ResponseBody> jsonEntity(Request request) {
+        return loadEntity(request).thenApply(e -> Responses.bodyFrom("{\"json\":\"" + e + "\"}"));
     }
 
-    private CompletableFuture<Object> xmlEntity(Request request) {
-        return loadEntity(request).thenApply(e -> "<xml>" + e + "</xml>");
+    private CompletableFuture<ResponseBody> xmlEntity(Request request) {
+        return loadEntity(request).thenApply(e -> Responses.bodyFrom("<xml>" + e + "</xml>"));
     }
 
     private CompletableFuture<String> loadEntity(Request request) {

@@ -1,6 +1,8 @@
 package webster.testapp;
 
 import webster.requestresponse.Request;
+import webster.requestresponse.ResponseBody;
+import webster.requestresponse.Responses;
 import webster.resource.Resource;
 
 import java.util.Collections;
@@ -12,11 +14,11 @@ import static java.util.stream.Collectors.joining;
 public class PathParamsRes implements Resource {
 
     @Override
-    public CompletableFuture<Object> entity(Request request) {
-        return CompletableFuture.completedFuture("{" +
+    public CompletableFuture<ResponseBody> entity(Request request) {
+        return CompletableFuture.completedFuture(Responses.bodyFrom("{" +
                 "\"splats\":\"" + request.splats().value().stream().collect(joining(",")) + "\",\n" +
                 "\"foo\":\"" + request.pathParam(":foo").value().get() + "\""
-                + "}\n");
+                + "}\n"));
     }
 
     @Override
