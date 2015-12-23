@@ -9,8 +9,6 @@ Setup
 
 Java 8 and Maven 3 are required.
 
-Install [Webster](https://github.com/pschirmacher/webster) to your local maven repository. Then:
-
     git clone https://github.com/pschirmacher/webster-example.git
     cd webster-example
     mvn package
