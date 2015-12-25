@@ -13,12 +13,12 @@
             <dependency>
                 <groupId>com.innoq</groupId>
                 <artifactId>webster-core</artifactId>
-                <version>0.1.0-SNAPSHOT</version>
+                <version>0.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.innoq</groupId>
                 <artifactId>webster-html</artifactId>
-                <version>0.1.0-SNAPSHOT</version>
+                <version>0.1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -33,20 +33,6 @@
             <artifactId>webster-html</artifactId>
         </dependency>
     </dependencies>
-
-    <repositories>
-      <repository>
-        <id>sonatype-snapshots</id>
-        <name>Sonatype Snapshot Repository</name>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        <snapshots>
-          <enabled>true</enabled>
-        </snapshots>
-        <releases>
-          <enabled>false</enabled>
-        </releases>
-      </repository>
-    </repositories>
 
     <build>
         <plugins>
